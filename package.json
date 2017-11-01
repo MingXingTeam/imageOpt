@@ -1,0 +1,29 @@
+{
+  "name": "imageopt",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "imagemin": "^5.3.1",
+    "imagemin-jpegtran": "^5.0.2",
+    "imagemin-pngquant": "^5.0.1"
+  },
+  "devDependencies": {
+    "electron": "1.7.9",
+    "gulp": "^3.9.1",
+    "gulp-imagemin": "^3.4.0",
+    "imagemin-guetzli": "^1.0.0",
+    "imagemin-mozjpeg": "^6.0.0",
+    "koa": "^2.3.0",
+    "koa-cors": "0.0.16",
+    "koa-generator": "^1.1.16",
+    "log": "^1.4.0",
+    "phantomjs": "^2.1.7",
+    "webpage": "^0.3.0"
+  }
+}

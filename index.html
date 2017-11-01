@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+</head>
+<body>
+
+<form method="POST" action="http://127.0.0.1:3000/upload" enctype="multipart/form-data">
+    <p>file upload</p>
+    <span>picName:</span><input name="picName" type="text" /><br/>
+    <input name="file" type="file" /><br/><br/>
+    <button id="submit">submit</button>
+</form>
+
+<script>
+    document.getElementById("submit").onclick = function(event){
+        //取消掉默认的form提交方式
+        if(event.preventDefault) event.preventDefault();
+        else event.returnValue = false;                           //对于IE的取消方式
+
+        var formDOM = document.getElementsByTagName("form")[0];
+        //将form的DOM对象当作FormData的构造函数
+        var formData = new FormData(formDOM);
+        var req = new XMLHttpRequest();
+        req.open("POST", "http://127.0.0.1:3000/upload");
+        //请求完成
+        req.onload = function(){
+            if(this.status === 200){
+                //对请求成功的处理
+                console.log(this);
+            }
+        }
+        //将form数据发送出去
+        req.send(formData);
+        //避免内存泄漏
+        req = null;
+    }
+</script>
+
+</body>
+</html>
