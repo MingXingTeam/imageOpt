@@ -40,6 +40,7 @@ uploadAPI.upload = (ctx, next) => {
             file.pipe(fs.createWriteStream(saveTo))
             file.on('end', function () {
                 resolve({
+                    suffix: `${getSuffix(fileName)}`,
                     imgPath: `${filePath}/${fileName}`,
                     imgKey: fileName
                 })

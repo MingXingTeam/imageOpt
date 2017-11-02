@@ -19,10 +19,13 @@
     "gulp-imagemin": "^3.4.0",
     "imagemin-guetzli": "^1.0.0",
     "imagemin-mozjpeg": "^6.0.0",
+    "imagemin-webp": "^4.0.0",
     "koa": "^2.3.0",
     "koa-cors": "0.0.16",
     "koa-generator": "^1.1.16",
+    "lodash": "^4.17.4",
     "log": "^1.4.0",
+    "mathjs": "^3.16.5",
     "phantomjs": "^2.1.7",
     "webpage": "^0.3.0"
   }

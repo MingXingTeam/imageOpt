@@ -3,18 +3,138 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-
+    <style>
+        .f-cb{
+            overflow: hidden;
+        }
+        .f-fl {
+            float: left;
+        }
+    </style>
 </head>
 <body>
-
+<script src="https://cdn.bootcss.com/echarts/3.7.2/echarts-en.js"></script>
 <form method="POST" action="http://127.0.0.1:3000/upload" enctype="multipart/form-data">
-    <p>file upload</p>
-    <span>picName:</span><input name="picName" type="text" /><br/>
     <input name="file" type="file" /><br/><br/>
     <button id="submit">submit</button>
 </form>
 
+<div id="main" style="width: 1800px;height:400px;display: none"></div>
+
+<div class="f-cb">
+    <div class="f-fl" id="main0" style="width: 250px;height:400px;display: none"></div>
+    <div class="f-fl" id="main1" style="width: 250px;height:400px;display: none"></div>
+    <div class="f-fl" id="main2" style="width: 250px;height:400px;display: none"></div>
+    <div class="f-fl" id="main3" style="width: 250px;height:400px;display: none"></div>
+</div>
+<!--压缩比，压缩时间，视觉效果，-->
 <script>
+
+    var getPointData = function (keys) {
+        var arr = [];
+        for(var key in keys) {
+            if(!keys.hasOwnProperty(key)) return;
+            var obj = {xAxis:0, y: 350, name:key, symbolSize:20, symbol: 'image://../asset/ico/折线图.png'};
+            arr.push(obj);
+        }
+        return arr;
+    };
+    var createChart = function (id, source) {
+        var target = document.getElementById(id);
+        var chart = echarts.init(target);
+
+        var option = {
+            xAxis : [
+                {
+                    type : 'category',
+                    data : source.category,
+                    show: true
+                }
+            ],
+            yAxis : [
+                {
+                    type : 'value',
+                    show: false
+                }
+            ],
+            series : source.series
+        };
+
+        chart.setOption(option);
+        target.style.display = 'block';
+    }
+
+    var getUniqueId = (function () {
+      var i = -1;
+      return function () {
+          return i++;
+      }
+    })();
+
+    var createCharts = function (data) {
+        var responseJson = JSON.parse(data);
+        var source = {
+            category: ['压缩比', '压缩时间'],
+            data: [],
+            point: [],
+            title: null,
+            series: []
+        };
+
+        var colorList = [
+            '#C1232B','#B5C334','#FCCE10','#E87C25','#27727B',
+            '#FE8463','#9BCA63','#FAD860','#F3A43B','#60C0DD',
+            '#D7504B','#C6E579','#F4E001','#F0805A','#26C0C0'
+        ];
+        var i = 0;
+        for(var key in responseJson) {
+            if(!responseJson.hasOwnProperty(key)) return;
+            var serie = {
+                name:'搜索引擎',
+                type:'bar',
+                barGap: '1',
+                barWidth: 40,                   // 系列级个性化，柱形宽度
+                itemStyle: {
+                    normal: {                   // 系列级个性化，横向渐变填充
+                        borderRadius: 5,
+                        color : (function (){
+                            return colorList[i]
+                        })(),
+                        label : {
+                            show : true,
+                            position: 'top',
+                            textStyle : {
+                                fontSize : '14',
+                                fontFamily : '微软雅黑',
+                                fontWeight : 'bold'
+                            },
+                            formatter: (function () {
+                                var title = key;
+                                return function (data) {
+                                    if(data.name == '压缩比') {
+                                        return title+'\n'+data.value+'%';
+                                    }else if(data.name == '压缩时间') {
+                                        return title+'\n'+data.value+"ms";
+                                    } else {
+                                        return title+'\n'+data.value;
+                                    }
+                                }
+                            })()
+                        }
+                    }
+                },
+                data:[
+                    620, 732,701, 734, 890, 930, 820
+                ]
+            };
+            serie.name = key;
+            serie.data = responseJson[key];
+            source.series.push(serie);
+            i++;
+        }
+        createChart("main", source);
+    };
+
     document.getElementById("submit").onclick = function(event){
         //取消掉默认的form提交方式
         if(event.preventDefault) event.preventDefault();
@@ -28,8 +148,11 @@
         //请求完成
         req.onload = function(){
             if(this.status === 200){
+                console.log(this)
+                document.getElementById('main').innerHTML = '';
                 //对请求成功的处理
-                console.log(this);
+                createCharts(this.response);
+                document.body.append(this.responseText)
             }
         }
         //将form数据发送出去
